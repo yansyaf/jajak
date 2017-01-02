@@ -9,13 +9,13 @@ import (
 )
 
 type Poll struct {
-	title   string `bson:"title" json:"title"`
-	creator string `bson:"creator" json:"creator"`
-	//	items   []string
+	Title   string   `bson:"title" json:"title"`
+	Creator string   `bson:"creator" json:"creator"`
+	Items   []string `bson:"items" json:"items"`
 }
 
 const (
-	CollName = "poll3"
+	CollName = "polls"
 )
 
 func prints(polls *[]Poll) {
@@ -25,7 +25,14 @@ func prints(polls *[]Poll) {
 }
 
 func print(poll *Poll) {
-	fmt.Println("[poll]> " + poll.title + " " + poll.creator)
+	fmt.Printf("[poll]> %s %s %d\r\n", poll.Title, poll.Creator, len(poll.Items))
+	if len(poll.Items) > 0 {
+		fmt.Printf("[poll][item]> ")
+		for _, item := range poll.Items {
+			fmt.Printf("%s\t", item)
+		}
+		fmt.Printf("\r\n")
+	}
 }
 
 func ListPoll(context *gin.Context, db *mgo.Database) []Poll {
