@@ -1,59 +1,45 @@
 package main
 
 import (
-	"gopkg.in/gin-gonic/gin.v1"
+	"log"
+	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/toshim45/jajak/handlers"
+	"github.com/toshim45/jajak/utils"
 	"gopkg.in/mgo.v2"
 )
 
-var (
-	Session *mgo.Session
-)
-
 const (
-	MongoURI = "mongodb://localhost:27017/jajak"
-	DbName   = "jajak"
+	mongoURI = "mongodb://localhost:27017/jajak"
+	dbName   = "jajak"
+	port     = "8071"
 )
-
-func PanicError(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
-func ContextError(c *gin.Context, e error) {
-	if e != nil {
-		c.Error(e)
-		PanicError(e)
-	}
-}
-
-func init() {
-	session, err := mgo.Dial(MongoURI)
-	PanicError(err)
-
-	Session = session
-}
 
 func main() {
-	router := gin.Default()
-	router.GET("/ping", ping)
-	router.GET("/polls", listPoll)
-	router.POST("/polls", submitPoll)
-
-	router.Run(":8071")
-
-	defer Session.Close()
+	createRoutes()
 }
 
-func ping(c *gin.Context) {
-	c.JSON(200, gin.H{"message": "pong"})
+func createRoutes() {
+	session := initMongo()
+	db := session.DB(dbName)
+
+	r := mux.NewRouter()
+
+	pingHandler := handlers.NewPingHandler(session)
+	pollHandler := handlers.NewPollHandler(db)
+
+	r.HandleFunc("/ping", pingHandler.GetPing).Methods("GET")
+	r.HandleFunc("/polls", pollHandler.GetPolls).Methods("GET")
+
+	log.Printf("server up at port %s", port)
+	http.ListenAndServe(":"+port, r)
+	defer session.Close()
 }
 
-func listPoll(c *gin.Context) {
-	c.JSON(200, ListPoll(c, Session.DB(DbName)))
-}
-
-func submitPoll(c *gin.Context) {
-	SubmitPoll(c, Session.DB(DbName))
-	c.Writer.WriteHeader(201)
+func initMongo() *mgo.Session {
+	session, err := mgo.Dial(mongoURI)
+	utils.ThrowPanic(err)
+	log.Printf("connected to mongo on %s", mongoURI)
+	return session
 }

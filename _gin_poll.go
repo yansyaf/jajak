@@ -35,6 +35,7 @@ func print(poll *Poll) {
 	}
 }
 
+
 func ListPoll(context *gin.Context, db *mgo.Database) []Poll {
 	//	db := context.MustGet("db").(*mgo.Database)
 	polls := []Poll{}
