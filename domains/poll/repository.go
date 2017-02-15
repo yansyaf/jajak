@@ -6,6 +6,10 @@ const (
 	CollName = "polls"
 )
 
+type IPollRepository interface {
+	GetPolls() ([]Poll, error)
+}
+
 type PollRepository struct {
 	db *mgo.Database
 }

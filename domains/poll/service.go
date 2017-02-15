@@ -1,16 +1,12 @@
 package poll
 
-import (
-	"github.com/toshim45/jajak/utils"
-	"gopkg.in/mgo.v2"
-)
+import "github.com/toshim45/jajak/utils"
 
 type PollService struct {
-	r *PollRepository
+	r IPollRepository
 }
 
-func NewPollService(database *mgo.Database) *PollService {
-	repository := NewPollRepository(database)
+func NewPollService(repository IPollRepository) *PollService {
 	return &PollService{r: repository}
 }
 

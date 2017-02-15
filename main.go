@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/toshim45/jajak/domains/poll"
 	"github.com/toshim45/jajak/handlers"
 	"github.com/toshim45/jajak/utils"
 	"gopkg.in/mgo.v2"
@@ -24,11 +25,12 @@ func createRoutes() {
 	session := initMongo()
 	db := session.DB(dbName)
 
-	r := mux.NewRouter()
+	pollService := poll.NewService(db)
 
 	pingHandler := handlers.NewPingHandler(session)
-	pollHandler := handlers.NewPollHandler(db)
+	pollHandler := handlers.NewPollHandler(pollService)
 
+	r := mux.NewRouter()
 	r.HandleFunc("/ping", pingHandler.GetPing).Methods("GET")
 	r.HandleFunc("/polls", pollHandler.GetPolls).Methods("GET")
 

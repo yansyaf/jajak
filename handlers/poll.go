@@ -4,16 +4,13 @@ import (
 	"net/http"
 
 	"github.com/toshim45/jajak/domains/poll"
-
-	"gopkg.in/mgo.v2"
 )
 
 type PollHandler struct {
 	s *poll.PollService
 }
 
-func NewPollHandler(database *mgo.Database) *PollHandler {
-	service := poll.NewPollService(database)
+func NewPollHandler(service *poll.PollService) *PollHandler {
 	return &PollHandler{s: service}
 }
 
