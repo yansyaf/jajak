@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/justinas/alice"
 	"github.com/toshim45/jajak/domains/poll"
 	"github.com/toshim45/jajak/handlers"
 	"github.com/toshim45/jajak/utils"
@@ -18,6 +19,7 @@ const (
 )
 
 func main() {
+	utils.CommonPanicHandler()
 	createRoutes()
 }
 
@@ -34,8 +36,10 @@ func createRoutes() {
 	r.HandleFunc("/ping", pingHandler.GetPing).Methods("GET")
 	r.HandleFunc("/polls", pollHandler.GetPolls).Methods("GET")
 
+	chainHandler := alice.New(utils.LoggingHandler)
+
 	log.Printf("server up at port %s", port)
-	http.ListenAndServe(":"+port, r)
+	http.ListenAndServe(":"+port, chainHandler.Then(r))
 	defer session.Close()
 }
 

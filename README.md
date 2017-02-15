@@ -2,6 +2,7 @@
 
 ## stack
 * api interface: ~~gin gionic~~ gorilla mux
+* middleware chainning: alice
 * persistence: mgo (mongodb)
 * pattern: handler - domain (DDD)
 * unit testing: mocking interface (no framework)
