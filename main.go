@@ -37,7 +37,7 @@ func createRoutes() {
 	r.HandleFunc("/ping", pingHandler.GetPing).Methods("GET")
 	r.HandleFunc("/polls", pollHandler.GetPolls).Methods("GET")
 
-	chainHandler := alice.New(utils.LoggingHandler)
+	chainHandler := alice.New(utils.LoggingHandler, utils.EnableCors().Handler)
 
 	log.Printf("server up at port %s", port)
 	http.ListenAndServe(":"+port, chainHandler.Then(r))
