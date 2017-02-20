@@ -7,7 +7,6 @@
 //     Host: 127.0.0.1:8071
 //     BasePath: /
 //     Version: 0.0.1
-//     License: MIT http://opensource.org/licenses/MIT
 //     Contact: Artiko W <artikow@gmail.com>
 //
 //     Consumes:
@@ -25,6 +24,11 @@ package main
 //		200: PingResponse
 //		500: ErrorResponse
 
+// swagger:route GET /polls polls GetPolls
+// 	responses:
+//		200: PollResponse
+//		500: ErrorResponse
+
 // Standard error response returned when got Exception in apps
 // swagger:response ErrorResponse
 type ErrorResponse struct {
@@ -40,5 +44,16 @@ type PingResponse struct {
 	// in: body
 	Body struct {
 		Message string `json: "message"`
+	}
+}
+
+// Poll response, return list of polling
+// swagger:response PollResponse
+type PollResponse struct {
+	// in: body
+	Body struct {
+		Title   string   `db:"title" json:"title"`
+		Creator string   `db:"creator" json:"creator"`
+		Items   []string `db:"items" json:"items"`
 	}
 }

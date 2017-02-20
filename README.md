@@ -13,4 +13,5 @@
 1. `go build`
 1. cd test & `go test` this will compile and run the test in folder test or alternatively if you want just re-test without re-compile the test code, then from `<root-folder>` run ```go test github.com/toshim45/jajak/test```
 1. install go-swagger, generate the swagger-spec json, see [here](https://goswagger.io)
-1. run `swagger serve <swagger-spec.json> --port=<up-to-u> --host=<api-ip-address>`
+1. run `swagger serve <swagger-spec.json> --port=<swagger-port> --host=<api-ip-address>` --no-ui --no-open
+1. deploy swagger ui (if you use docker, available at docker hub), configure your swagger-ui to consume this <swagger-spec.json> running in port <swagger-port>
