@@ -2,6 +2,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -13,20 +14,15 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
-const (
-	mongoURI = "mongodb://localhost:27017/jajak"
-	dbName   = "jajak"
-	port     = "8071"
-)
-
 func main() {
 	utils.CommonPanicHandler()
-	createRoutes()
+	config := utils.GetConfig()
+	createRoutes(config)
 }
 
-func createRoutes() {
-	session := initMongo()
-	db := session.DB(dbName)
+func createRoutes(config utils.Config) {
+	session := initMongo(config)
+	db := session.DB(config.MongoDBName)
 
 	pollService := poll.NewService(db)
 
@@ -37,14 +33,20 @@ func createRoutes() {
 	r.HandleFunc("/ping", pingHandler.GetPing).Methods("GET")
 	r.HandleFunc("/polls", pollHandler.GetPolls).Methods("GET")
 
-	chainHandler := alice.New(utils.LoggingHandler, utils.EnableCors().Handler)
+	chainHandler := alice.New(utils.LoggingHandler)
 
-	log.Printf("server up at port %s", port)
-	http.ListenAndServe(":"+port, chainHandler.Then(r))
+	if config.EnableSwagger {
+		log.Printf("swagger enabled, loading CORS with origin: %s", config.AllowedOrigin)
+		chainHandler = chainHandler.Append(utils.EnableCors(config).Handler)
+	}
+
+	log.Printf("server up at port %s", config.Port)
+	http.ListenAndServe(":"+config.Port, chainHandler.Then(r))
 	defer session.Close()
 }
 
-func initMongo() *mgo.Session {
+func initMongo(c utils.Config) *mgo.Session {
+	mongoURI := fmt.Sprintf("mongodb://%s:%s/%s", c.MongoHost, c.MongoPort, c.MongoDBName)
 	session, err := mgo.Dial(mongoURI)
 	utils.ThrowPanic(err)
 	log.Printf("connected to mongo on %s", mongoURI)
