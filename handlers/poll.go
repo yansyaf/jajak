@@ -1,8 +1,10 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/toshim45/jajak/domains/poll"
 )
 
@@ -16,4 +18,15 @@ func NewPollHandler(service *poll.PollService) *PollHandler {
 
 func (h *PollHandler) GetPolls(w http.ResponseWriter, r *http.Request) {
 	ReplyOk(w, h.s.GetPolls())
+}
+
+func (h *PollHandler) GetPollById(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	singlePoll := h.s.GetPollById(id)
+	if singlePoll.ID == "" {
+		ReplyFail(w, 404, fmt.Errorf("id %s not found", id))
+		return
+	}
+	ReplyOk(w, singlePoll)
 }

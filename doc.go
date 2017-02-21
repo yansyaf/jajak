@@ -29,6 +29,18 @@ package main
 //		200: PollResponse
 //		500: ErrorResponse
 
+// swagger:route GET /polls/{ID} polls GetPollById
+// 	responses:
+//		200: PollResponse
+//		500: ErrorResponse
+
+// swagger:parameters GetPollById
+type PollPathParameter struct {
+	// In: path
+	// Required: true
+	ID string `json:"id"`
+}
+
 // Standard error response returned when got Exception in apps
 // swagger:response ErrorResponse
 type ErrorResponse struct {
@@ -41,19 +53,20 @@ type ErrorResponse struct {
 // Standard ping response, return inputted message if provided
 // swagger:response PingResponse
 type PingResponse struct {
-	// in: body
+	// In: body
 	Body struct {
-		Message string `json: "message"`
+		Message string `json:"message"`
 	}
 }
 
 // Poll response, return list of polling
 // swagger:response PollResponse
 type PollResponse struct {
-	// in: body
+	// In: body
 	Body struct {
-		Title   string   `db:"title" json:"title"`
-		Creator string   `db:"creator" json:"creator"`
-		Items   []string `db:"items" json:"items"`
+		ID      string   `json:"id"`
+		Title   string   `json:"title"`
+		Creator string   `json:"creator"`
+		Items   []string `json:"items"`
 	}
 }

@@ -1,7 +1,10 @@
 package poll
 
+import "gopkg.in/mgo.v2/bson"
+
 type Poll struct {
-	Title   string   `db:"title" json:"title"`
-	Creator string   `db:"creator" json:"creator"`
-	Items   []string `db:"items" json:"items"`
+	ID      bson.ObjectId `bson:"_id" json:"id"`
+	Title   string        `bson:"title" json:"title"`
+	Creator string        `bson:"creator" json:"creator"`
+	Items   []string      `bson:"items" json:"items"`
 }
