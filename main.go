@@ -27,10 +27,12 @@ func createRoutes(config utils.Config) {
 	pollService := poll.NewService(db)
 
 	pingHandler := handlers.NewPingHandler(session)
+	puzzleHandler := handlers.NewPuzzleHandler()
 	pollHandler := handlers.NewPollHandler(pollService)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/ping", pingHandler.GetPing).Methods("GET")
+	r.HandleFunc("/puzzle", puzzleHandler.GetAnswer).Methods("GET")
 	r.HandleFunc("/polls", pollHandler.GetPolls).Methods("GET")
 	r.HandleFunc("/polls/{id}", pollHandler.GetPollById).Methods("GET")
 
