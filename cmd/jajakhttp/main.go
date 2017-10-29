@@ -27,10 +27,10 @@ func createRoutes(envConfig config.Environment) {
 	db := session.DB(envConfig.MongoDBName)
 	upTime := uptime.New()
 
-	pollService := poll.NewService(db)
+	pollService := poll.New(db)
 
-	pingHandler := httphandler.NewPingHandler(session, upTime)
-	pollHandler := httphandler.NewPollHandler(pollService)
+	pingHandler := httphandler.NewPing(session, upTime)
+	pollHandler := httphandler.NewPoll(pollService)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/ping", pingHandler.GetPing).Methods("GET")

@@ -2,8 +2,8 @@ package poll
 
 import "gopkg.in/mgo.v2"
 
-func NewService(database *mgo.Database) *PollService {
-	repository := NewPollRepository(database)
-	service := NewPollService(repository)
+func New(database *mgo.Database) *Service {
+	repository := NewMongoRepository(database)
+	service := NewService(repository)
 	return service
 }

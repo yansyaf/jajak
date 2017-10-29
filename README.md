@@ -8,7 +8,7 @@
 * unit testing: mocking interface (no framework)
 * api documentation: [go-swagger](https://github.com/go-swagger/go-swagger)
 * configuration: [env-config](https://github.com/kelseyhightower/envconfig)
-* event consumer: [consumer](github.com/Shopify/sarama) [group](github.com/wvanbergen/kafka/consumergroup) 
+* event consumer: [consumer](github.com/Shopify/sarama) & [group](github.com/wvanbergen/kafka/consumergroup) 
 
 ## walkthrough
 1. cd `<root-folder>/cmd/<one-of-cmd>`

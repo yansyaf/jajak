@@ -5,21 +5,21 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
-type PollService struct {
+type Service struct {
 	r IPollRepository
 }
 
-func NewPollService(repository IPollRepository) *PollService {
-	return &PollService{r: repository}
+func NewService(repository IPollRepository) *Service {
+	return &Service{r: repository}
 }
 
-func (s *PollService) GetPolls() []Poll {
+func (s *Service) GetPolls() []Poll {
 	polls, err := s.r.GetPolls()
 	httputil.ThrowPanic(err)
 	return polls
 }
 
-func (s *PollService) GetPollById(id string) Poll {
+func (s *Service) GetPollById(id string) Poll {
 	singlePoll, err := s.r.GetPollById(id)
 	if err == mgo.ErrNotFound {
 		return Poll{}

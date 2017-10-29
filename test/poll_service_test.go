@@ -3,7 +3,7 @@ package test
 import (
 	"testing"
 
-	"github.com/toshim45/jajak/domains/poll"
+	"github.com/toshim45/jajak/poll"
 )
 
 type MockPollRepository struct {

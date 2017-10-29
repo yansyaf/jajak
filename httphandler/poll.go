@@ -8,19 +8,19 @@ import (
 	"github.com/toshim45/jajak/poll"
 )
 
-type PollHandler struct {
-	s *poll.PollService
+type Poll struct {
+	s *poll.Service
 }
 
-func NewPollHandler(service *poll.PollService) *PollHandler {
-	return &PollHandler{s: service}
+func NewPoll(service *poll.Service) *Poll {
+	return &Poll{s: service}
 }
 
-func (h *PollHandler) GetPolls(w http.ResponseWriter, r *http.Request) {
+func (h *Poll) GetPolls(w http.ResponseWriter, r *http.Request) {
 	ReplyOk(w, h.s.GetPolls())
 }
 
-func (h *PollHandler) GetPollById(w http.ResponseWriter, r *http.Request) {
+func (h *Poll) GetPollById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	singlePoll := h.s.GetPollById(id)

@@ -17,16 +17,16 @@ type ping struct {
 	Message string `json:"message" schema:"message"`
 }
 
-type PingHandler struct {
+type Ping struct {
 	session *mgo.Session
 	uptime  *uptime.Service
 }
 
-func NewPingHandler(s *mgo.Session, u *uptime.Service) *PingHandler {
-	return &PingHandler{session: s, uptime: u}
+func NewPing(s *mgo.Session, u *uptime.Service) *Ping {
+	return &Ping{session: s, uptime: u}
 }
 
-func (h *PingHandler) GetPing(w http.ResponseWriter, r *http.Request) {
+func (h *Ping) GetPing(w http.ResponseWriter, r *http.Request) {
 	err := h.session.Ping()
 	if err != nil {
 		ReplyFail(w, 500, err)
