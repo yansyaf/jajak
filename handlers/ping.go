@@ -1,7 +1,11 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
+	"time"
+
+	"github.com/toshim45/jajak/uptime"
 
 	"github.com/gorilla/schema"
 	"gopkg.in/mgo.v2"
@@ -15,10 +19,11 @@ type ping struct {
 
 type PingHandler struct {
 	session *mgo.Session
+	uptime  *uptime.Service
 }
 
-func NewPingHandler(s *mgo.Session) *PingHandler {
-	return &PingHandler{session: s}
+func NewPingHandler(s *mgo.Session, u *uptime.Service) *PingHandler {
+	return &PingHandler{session: s, uptime: u}
 }
 
 func (h *PingHandler) GetPing(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +32,7 @@ func (h *PingHandler) GetPing(w http.ResponseWriter, r *http.Request) {
 		ReplyFail(w, 500, err)
 	}
 
-	message := "hello-jajak"
+	message := fmt.Sprintf("[%s] server up since %s ago", time.Now(), h.uptime.GetDuration())
 
 	param := new(ping)
 	err = schema.NewDecoder().Decode(param, r.URL.Query())

@@ -9,7 +9,7 @@ import (
 	"github.com/justinas/alice"
 	"github.com/toshim45/jajak/domains/poll"
 	"github.com/toshim45/jajak/handlers"
-	//	"github.com/toshim45/jajak/uptime"
+	"github.com/toshim45/jajak/uptime"
 	"github.com/toshim45/jajak/utils"
 	"gopkg.in/mgo.v2"
 )
@@ -23,11 +23,11 @@ func main() {
 func createRoutes(config utils.Config) {
 	session := initMongo(config)
 	db := session.DB(config.MongoDBName)
-	//	upTime := uptime.New()
+	upTime := uptime.New()
 
 	pollService := poll.NewService(db)
 
-	pingHandler := handlers.NewPingHandler(session)
+	pingHandler := handlers.NewPingHandler(session, upTime)
 	puzzleHandler := handlers.NewPuzzleHandler()
 	pollHandler := handlers.NewPollHandler(pollService)
 
