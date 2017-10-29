@@ -16,6 +16,8 @@ type Environment struct {
 	RedisPort     string `envconfig:"JJ_REDIS_PORT" default:"6379"`
 	EnableSwagger bool   `envconfig:"JJ_ENABLE_SWAGGER" default:"true"`
 	AllowedOrigin string `envconfig:"JJ_ALLOWED_ORIGIN" default:"*"`
+	ZookeeperHost string `envconfig:"JJ_ZOOKEEPER_EVENT" default:"127.0.0.1:2181"`
+	EventTopic    string `envconfig:"JJ_EVENT_TOPIC" default:"jajak-poll-updated"`
 }
 
 var env Environment

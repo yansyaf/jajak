@@ -7,7 +7,8 @@
 * pattern: [DDD](https://en.wikipedia.org/wiki/Domain-driven_design)
 * unit testing: mocking interface (no framework)
 * api documentation: [go-swagger](https://github.com/go-swagger/go-swagger)
-* configuration : [env-config](https://github.com/kelseyhightower/envconfig)
+* configuration: [env-config](https://github.com/kelseyhightower/envconfig)
+* event consumer: [consumer](github.com/Shopify/sarama) [group](github.com/wvanbergen/kafka/consumergroup) 
 
 ## walkthrough
 1. cd `<root-folder>/cmd/<one-of-cmd>`
@@ -17,3 +18,13 @@
 1. install go-swagger, generate the swagger-spec json, see [here](https://goswagger.io)
 1. run `swagger serve <swagger-spec.json> --port=<swagger-port> --host=<api-ip-address>` --no-ui --no-open
 1. deploy swagger ui (if you use docker, available at docker hub), configure your swagger-ui to consume this <swagger-spec.json> running in port <swagger-port>
+
+## structure
+for more info see [here](https://talks.golang.org/2014/organizeio.slide#9)
+```
+/root
+/domain-definition
+/util-definition
+	/cmd/cmd-1
+	/cmd/cmd-2
+```
