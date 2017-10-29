@@ -1,17 +1,17 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          jajakd
+# Provides:          jajakhttpd
 # Required-Start:    $local_fs $network $named $time $syslog
 # Required-Stop:     $local_fs $network $named $time $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Description:       Jajak API
+# Description:       Jajak http API
 ### END INIT INFO
 
 GO_BIN=$GOPATH/bin
-SCRIPT=$GO_BIN/jajak
+SCRIPT=$GO_BIN/jajakhttp
 RUNAS=artikow
-NAME=jajakd
+NAME=jajakhttpd
 SWAGGER_FILE=$GOPATH/src/github.com/toshim45/jajak/swagger.json
 SWAGGER=$GO_BIN/swagger
 SWAGGER_HOST=127.0.0.1

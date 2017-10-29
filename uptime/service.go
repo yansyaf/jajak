@@ -4,10 +4,12 @@ import (
 	"time"
 )
 
+// Service uptime definition
 type Service struct {
 	start time.Time
 }
 
+// New uptime service
 func New() *Service {
 	return &Service{
 		start: time.Now(),

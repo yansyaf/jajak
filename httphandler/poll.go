@@ -1,11 +1,11 @@
-package handlers
+package httphandler
 
 import (
 	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/toshim45/jajak/domains/poll"
+	"github.com/toshim45/jajak/poll"
 )
 
 type PollHandler struct {

@@ -1,4 +1,4 @@
-package utils
+package config
 
 import (
 	"log"
@@ -7,7 +7,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-type Config struct {
+type Environment struct {
 	Port          string `envconfig:"JJ_PORT" default:"8071"`
 	MongoHost     string `envconfig:"JJ_MONGO_HOST" default:"127.0.0.1"`
 	MongoPort     string `envconfig:"JJ_MONGO_PORT" default:"27017"`
@@ -18,16 +18,16 @@ type Config struct {
 	AllowedOrigin string `envconfig:"JJ_ALLOWED_ORIGIN" default:"*"`
 }
 
-var conf Config
+var env Environment
 var once sync.Once
 
-func GetConfig() Config {
+func NewEnv() Environment {
 	once.Do(func() {
-		err := envconfig.Process("", &conf)
+		err := envconfig.Process("", &env)
 		if err != nil {
 			log.Fatal("Can't load config: ", err)
 		}
 	})
 
-	return conf
+	return env
 }

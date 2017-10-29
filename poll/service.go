@@ -1,7 +1,7 @@
 package poll
 
 import (
-	"github.com/toshim45/jajak/utils"
+	"github.com/toshim45/jajak/httputil"
 	"gopkg.in/mgo.v2"
 )
 
@@ -15,7 +15,7 @@ func NewPollService(repository IPollRepository) *PollService {
 
 func (s *PollService) GetPolls() []Poll {
 	polls, err := s.r.GetPolls()
-	utils.ThrowPanic(err)
+	httputil.ThrowPanic(err)
 	return polls
 }
 
@@ -24,6 +24,6 @@ func (s *PollService) GetPollById(id string) Poll {
 	if err == mgo.ErrNotFound {
 		return Poll{}
 	}
-	utils.ThrowPanic(err)
+	httputil.ThrowPanic(err)
 	return singlePoll
 }

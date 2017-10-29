@@ -1,4 +1,4 @@
-package utils
+package httputil
 
 import (
 	"log"
@@ -9,7 +9,6 @@ import (
 func ThrowPanic(e error) {
 	if e != nil {
 		log.Panicf("throwing panic %v", e)
-		panic(e)
 	}
 }
 

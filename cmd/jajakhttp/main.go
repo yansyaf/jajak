@@ -7,50 +7,52 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
-	"github.com/toshim45/jajak/domains/poll"
-	"github.com/toshim45/jajak/handlers"
+	"github.com/toshim45/jajak/config"
+	"github.com/toshim45/jajak/httphandler"
+	"github.com/toshim45/jajak/httputil"
+	"github.com/toshim45/jajak/poll"
 	"github.com/toshim45/jajak/uptime"
-	"github.com/toshim45/jajak/utils"
+
 	"gopkg.in/mgo.v2"
 )
 
 func main() {
-	utils.CommonPanicHandler()
-	config := utils.GetConfig()
-	createRoutes(config)
+	httputil.CommonPanicHandler()
+	envConfig := config.NewEnv()
+	createRoutes(envConfig)
 }
 
-func createRoutes(config utils.Config) {
-	session := initMongo(config)
-	db := session.DB(config.MongoDBName)
+func createRoutes(envConfig config.Environment) {
+	session := initMongo(envConfig)
+	db := session.DB(envConfig.MongoDBName)
 	upTime := uptime.New()
 
 	pollService := poll.NewService(db)
 
-	pingHandler := handlers.NewPingHandler(session, upTime)
-	pollHandler := handlers.NewPollHandler(pollService)
+	pingHandler := httphandler.NewPingHandler(session, upTime)
+	pollHandler := httphandler.NewPollHandler(pollService)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/ping", pingHandler.GetPing).Methods("GET")
 	r.HandleFunc("/polls", pollHandler.GetPolls).Methods("GET")
 	r.HandleFunc("/polls/{id}", pollHandler.GetPollById).Methods("GET")
 
-	chainHandler := alice.New(utils.LoggingHandler)
+	chainHandler := alice.New(httputil.LoggingHandler)
 
-	if config.EnableSwagger {
-		log.Printf("swagger enabled, loading CORS with origin: %s", config.AllowedOrigin)
-		chainHandler = chainHandler.Append(utils.EnableCors(config).Handler)
+	if envConfig.EnableSwagger {
+		log.Printf("swagger enabled, loading CORS with origin: %s", envConfig.AllowedOrigin)
+		chainHandler = chainHandler.Append(httputil.EnableCors(envConfig).Handler)
 	}
 
-	log.Printf("server up at port %s", config.Port)
-	http.ListenAndServe(":"+config.Port, chainHandler.Then(r))
+	log.Printf("server up at port %s", envConfig.Port)
+	http.ListenAndServe(":"+envConfig.Port, chainHandler.Then(r))
 	defer session.Close()
 }
 
-func initMongo(c utils.Config) *mgo.Session {
+func initMongo(c config.Environment) *mgo.Session {
 	mongoURI := fmt.Sprintf("mongodb://%s:%s/%s", c.MongoHost, c.MongoPort, c.MongoDBName)
 	session, err := mgo.Dial(mongoURI)
-	utils.ThrowPanic(err)
+	httputil.ThrowPanic(err)
 	log.Printf("connected to mongo on %s", mongoURI)
 	return session
 }

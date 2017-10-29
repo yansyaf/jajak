@@ -1,6 +1,6 @@
-#Jajak MONGO 
+# Jajak MONGO 
 
-##initialization
+## initialization
 
 * enter mongo shell  
 `Macko2:github.com artikow$ mongo`  
@@ -24,7 +24,7 @@ WriteResult({ "nInserted" : 1 })
 > db.polls.find({creator:"artikow@gmail.com"})
 { "_id" : ObjectId("586578e7b67a434d4954b6de"), "title" : "programming language", "creator" : "artikow@gmail.com", "items" : [ "java", "go", "c++" ] }
 > db.polls.find({creator:"artiko@gmail.com"})
-> db.polls.insert({title:"e-commerce",creator:"mefisya@gmail.com",items:["tokopedia","salestock","shopee","blibli"]})
+> db.polls.insert({title:"e-commerce",creator:"artiko-1@gmail.com",items:["tokopedia","salestock","shopee","blibli"]})
 WriteResult({ "nInserted" : 1 })
 > db.polls.count()
 2
