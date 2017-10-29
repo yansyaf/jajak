@@ -28,7 +28,6 @@ func createRoutes(config utils.Config) {
 	pollService := poll.NewService(db)
 
 	pingHandler := handlers.NewPingHandler(session, upTime)
-	puzzleHandler := handlers.NewPuzzleHandler()
 	pollHandler := handlers.NewPollHandler(pollService)
 
 	r := mux.NewRouter()
