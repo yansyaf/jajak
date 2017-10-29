@@ -19,11 +19,21 @@ import (
 func main() {
 	httputil.CommonPanicHandler()
 	envConfig := config.NewEnv()
-	createRoutes(envConfig)
+	mgoSession := initMongo(envConfig)
+	router := createRoutes(envConfig, mgoSession)
+	chainHandler := alice.New(httputil.LoggingHandler)
+
+	if envConfig.EnableSwagger {
+		log.Printf("swagger enabled, loading CORS with origin: %s", envConfig.AllowedOrigin)
+		chainHandler = chainHandler.Append(httputil.EnableCors(envConfig).Handler)
+	}
+
+	log.Printf("server up at port %s", envConfig.Port)
+	http.ListenAndServe(":"+envConfig.Port, chainHandler.Then(router))
+	defer mgoSession.Close()
 }
 
-func createRoutes(envConfig config.Environment) {
-	session := initMongo(envConfig)
+func createRoutes(envConfig config.Environment, session *mgo.Session) *mux.Router {
 	db := session.DB(envConfig.MongoDBName)
 	upTime := uptime.New()
 
@@ -37,16 +47,7 @@ func createRoutes(envConfig config.Environment) {
 	r.HandleFunc("/polls", pollHandler.GetPolls).Methods("GET")
 	r.HandleFunc("/polls/{id}", pollHandler.GetPollById).Methods("GET")
 
-	chainHandler := alice.New(httputil.LoggingHandler)
-
-	if envConfig.EnableSwagger {
-		log.Printf("swagger enabled, loading CORS with origin: %s", envConfig.AllowedOrigin)
-		chainHandler = chainHandler.Append(httputil.EnableCors(envConfig).Handler)
-	}
-
-	log.Printf("server up at port %s", envConfig.Port)
-	http.ListenAndServe(":"+envConfig.Port, chainHandler.Then(r))
-	defer session.Close()
+	return r
 }
 
 func initMongo(c config.Environment) *mgo.Session {
