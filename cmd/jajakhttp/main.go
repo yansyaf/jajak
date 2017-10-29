@@ -33,7 +33,6 @@ func createRoutes(config utils.Config) {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/ping", pingHandler.GetPing).Methods("GET")
-	r.HandleFunc("/puzzle", puzzleHandler.GetAnswer).Methods("GET")
 	r.HandleFunc("/polls", pollHandler.GetPolls).Methods("GET")
 	r.HandleFunc("/polls/{id}", pollHandler.GetPollById).Methods("GET")
 
