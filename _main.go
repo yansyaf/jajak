@@ -1,4 +1,4 @@
-//go:generate swagger generate spec
+//moved to cmd/jajakrest
 package main
 
 import (
