@@ -1,7 +1,10 @@
 package poll
 
-import "gopkg.in/mgo.v2"
-import "gopkg.in/mgo.v2/bson"
+import (
+	"github.com/satori/go.uuid"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+)
 
 const (
 	CollName = "polls"
@@ -17,13 +20,19 @@ func NewMongoRepository(database *mgo.Database) *MongoRepository {
 }
 
 func (r *MongoRepository) GetPolls() ([]Poll, error) {
-	polls := []Poll{}
-	err := r.db.C(CollName).Find(nil).All(&polls)
-	return polls, err
+	models := []Poll{}
+	err := r.db.C(CollName).Find(nil).All(&models)
+	return models, err
 }
 
-func (r *MongoRepository) GetPollById(id string) (Poll, error) {
-	singlePoll := Poll{}
-	err := r.db.C(CollName).Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&singlePoll)
-	return singlePoll, err
+func (r *MongoRepository) GetPollById(id uuid.UUID) (Poll, error) {
+	model := Poll{}
+	//	err := r.db.C(CollName).Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&model)
+	err := r.db.C(CollName).Find(bson.M{"id": id}).One(&model)
+	return model, err
+}
+
+func (r *MongoRepository) StorePoll(in Poll) (err error) {
+	err = r.db.C(CollName).Insert(in)
+	return
 }

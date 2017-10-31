@@ -79,6 +79,7 @@ func createRoutes(envConfig config.Environment, session *mgo.Session) *mux.Route
 	r := mux.NewRouter()
 	r.HandleFunc("/ping", pingHandler.GetPing).Methods("GET")
 	r.HandleFunc("/polls", pollHandler.GetPolls).Methods("GET")
+	r.HandleFunc("/polls", pollHandler.StorePoll).Methods("POST")
 	r.HandleFunc("/polls/{id}", pollHandler.GetPollById).Methods("GET")
 
 	return r
