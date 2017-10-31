@@ -11,6 +11,9 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
+var IsShuttingDown bool
+var ShuttingDownDelay time.Duration = 5 * time.Second
+
 // swagger:parameters GetPing
 type ping struct {
 	// Required: false
@@ -33,6 +36,10 @@ func (h *Ping) GetPing(w http.ResponseWriter, r *http.Request) {
 	}
 
 	message := fmt.Sprintf("[%s] server up since %s ago", time.Now(), h.uptime.GetDuration())
+
+	if IsShuttingDown {
+		ReplyFail(w, 500, fmt.Errorf("server is shutting down, delay %s s", ShuttingDownDelay.String()))
+	}
 
 	param := new(ping)
 	err = schema.NewDecoder().Decode(param, r.URL.Query())

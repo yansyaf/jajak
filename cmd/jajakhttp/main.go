@@ -1,9 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
@@ -28,9 +33,38 @@ func main() {
 		chainHandler = chainHandler.Append(httputil.EnableCors(envConfig).Handler)
 	}
 
+	stopChan := make(chan os.Signal)
+	signal.Notify(stopChan, os.Interrupt, syscall.SIGTERM)
+
+	server := &http.Server{Addr: ":" + envConfig.Port, Handler: chainHandler.Then(router)}
+
+	go listenToSigTerm(stopChan, server, mgoSession)
+
 	log.Printf("server up at port %s", envConfig.Port)
-	http.ListenAndServe(":"+envConfig.Port, chainHandler.Then(router))
-	defer mgoSession.Close()
+
+	if err := server.ListenAndServe(); err != nil {
+		if err != http.ErrServerClosed {
+			log.Fatalln("http closed with Error:", err)
+		}
+	}
+}
+
+func listenToSigTerm(stopChan chan os.Signal, server *http.Server, mgoSession *mgo.Session) {
+	<-stopChan
+
+	log.Println("Shutting down server in ", httphandler.ShuttingDownDelay.String())
+	httphandler.IsShuttingDown = true
+
+	time.Sleep(httphandler.ShuttingDownDelay)
+	mgoSession.Close()
+
+	time.Sleep(httphandler.ShuttingDownDelay)
+	ctx, cancel := context.WithTimeout(context.Background(), httphandler.ShuttingDownDelay)
+	defer cancel()
+
+	if err := server.Shutdown(ctx); err != nil {
+		log.Fatalf("could not shutdown: %v", err)
+	}
 }
 
 func createRoutes(envConfig config.Environment, session *mgo.Session) *mux.Router {
