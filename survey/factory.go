@@ -1,4 +1,4 @@
-package poll
+package survey
 
 import "gopkg.in/mgo.v2"
 

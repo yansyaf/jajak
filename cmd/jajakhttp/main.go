@@ -15,7 +15,7 @@ import (
 	"github.com/toshim45/jajak/config"
 	"github.com/toshim45/jajak/httphandler"
 	"github.com/toshim45/jajak/httputil"
-	"github.com/toshim45/jajak/poll"
+	"github.com/toshim45/jajak/survey"
 	"github.com/toshim45/jajak/uptime"
 
 	"gopkg.in/mgo.v2"
@@ -71,16 +71,17 @@ func createRoutes(envConfig config.Environment, session *mgo.Session) *mux.Route
 	db := session.DB(envConfig.MongoDBName)
 	upTime := uptime.New()
 
-	pollService := poll.New(db)
+	surveyService := survey.New(db)
 
 	pingHandler := httphandler.NewPing(session, upTime)
-	pollHandler := httphandler.NewPoll(pollService)
+	surveyHandler := httphandler.NewSurvey(surveyService)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/ping", pingHandler.GetPing).Methods("GET")
-	r.HandleFunc("/polls", pollHandler.GetPolls).Methods("GET")
-	r.HandleFunc("/polls", pollHandler.StorePoll).Methods("POST")
-	r.HandleFunc("/polls/{id}", pollHandler.GetPollById).Methods("GET")
+	r.HandleFunc("/surveys", surveyHandler.GetSurveys).Methods("GET")
+	r.HandleFunc("/surveys", surveyHandler.StoreSurvey).Methods("POST")
+	r.HandleFunc("/surveys/{id}", surveyHandler.GetSurveyById).Methods("GET")
+	r.HandleFunc("/surveys/{id}/polls", surveyHandler.StorePoll).Methods("POST")
 
 	return r
 }
