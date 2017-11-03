@@ -8,6 +8,11 @@ import (
 )
 
 func ReplyOk(w http.ResponseWriter, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	if data == nil {
+		w.WriteHeader(201)
+		return
+	}
 	js, err := json.Marshal(data)
 	if err != nil {
 		resp := map[string]interface{}{
@@ -15,7 +20,6 @@ func ReplyOk(w http.ResponseWriter, data interface{}) {
 		}
 		js, _ = json.Marshal(resp)
 	}
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	w.Write(js)
 }
