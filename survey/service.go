@@ -37,6 +37,6 @@ func (s *Service) StoreSurvey(in Survey) (out Survey, err error) {
 	return
 }
 
-func (s *Service) StorePoll(id uuid.UUID, in Poll) (err error) {
-	return s.r.StorePoll(id, in)
+func (s *Service) StorePoll(id uuid.UUID, poll map[string]string) (err error) {
+	return s.r.StorePoll(id, poll)
 }

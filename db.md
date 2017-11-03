@@ -8,10 +8,6 @@
 * create surveys collection, insert mock
 ```
 MongoDB shell version: 3.2.11
-connecting to: test
-Server has startup warnings: 
-2016-12-30T03:53:58.704+0700 I CONTROL  [initandlisten] 
-2016-12-30T03:53:58.704+0700 I CONTROL  [initandlisten] ** WARNING: soft rlimits too low. Number of files is 256, should be at least 1000
 > use jajak
 switched to db jajak
 > db.surveys.insert({title:"programming language",creator:"artikow@gmail.com",options:["java","go","c++"]})
@@ -31,5 +27,8 @@ WriteResult({ "nInserted" : 1 })
 > db.surveys.find({creator:"artiko@gmail.com"})
 > db.surveys.find({creator:"artikow@gmail.com"})
 { "_id" : ObjectId("586578e7b67a434d4954b6de"), "title" : "programming language", "creator" : "artikow@gmail.com", "options" : [ "java", "go", "c++" ] }
+> db.surveys.update({_id: BinData(0,"OC8/NBVXT7Gf6TB8A6ZP7Q==")},{$set: {creator:"artiko@gmail.com"}})
+> db.surveys.update({_id: BinData(0,"OC8/NBVXT7Gf6TB8A6ZP7Q==")},{$set: {polls: { xyz: "bubur", abc: "roti"}}}) //reset the map
+> db.surveys.update({_id: BinData(0,"OC8/NBVXT7Gf6TB8A6ZP7Q==")},{$set: {"polls.mno": "nasi goreng", "poll.tuv" : "bubur"}}) //append the map
 > quit()
 ```

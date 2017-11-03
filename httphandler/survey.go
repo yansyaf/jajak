@@ -53,7 +53,7 @@ func (h *Survey) StoreSurvey(w http.ResponseWriter, r *http.Request) {
 func (h *Survey) StorePoll(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	paramId := vars["id"]
-	var model survey.Poll
+	var model map[string]string
 	var err error
 	var id uuid.UUID
 

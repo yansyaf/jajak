@@ -1,6 +1,8 @@
 package survey
 
 import (
+	"strings"
+
 	"github.com/satori/go.uuid"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -37,6 +39,10 @@ func (r *MongoRepository) StoreSurvey(in Survey) (err error) {
 	return
 }
 
-func (r *MongoRepository) StorePoll(id uuid.UUID, in Poll) (err error) {
+func (r *MongoRepository) StorePoll(id uuid.UUID, in map[string]string) (err error) {
+	for k, v := range in {
+		err = r.db.C(CollectionName).UpdateId(id, bson.M{"$set": bson.M{"polls." + strings.Split(k, ".")[0]: v}})
+	}
+
 	return
 }
