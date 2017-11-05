@@ -31,6 +31,9 @@ func (r *MongoRepository) GetSurveyById(id uuid.UUID) (Survey, error) {
 	model := Survey{}
 	//	err := r.db.C(CollectionName).Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&model)
 	err := r.db.C(CollectionName).Find(bson.M{"_id": id}).One(&model)
+	if err == mgo.ErrNotFound {
+		return model, nil
+	}
 	return model, err
 }
 

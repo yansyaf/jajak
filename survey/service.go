@@ -4,7 +4,6 @@ import (
 	"github.com/toshim45/jajak/httputil"
 
 	"github.com/satori/go.uuid"
-	"gopkg.in/mgo.v2"
 )
 
 type Service struct {
@@ -23,9 +22,6 @@ func (s *Service) GetSurveys() []Survey {
 
 func (s *Service) GetSurveyById(id uuid.UUID) Survey {
 	model, err := s.r.GetSurveyById(id)
-	if err == mgo.ErrNotFound {
-		return Survey{}
-	}
 	httputil.ThrowPanic(err)
 	return model
 }
