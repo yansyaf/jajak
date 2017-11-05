@@ -3,7 +3,7 @@
 ## stack
 * api interface: ~~gin gionic~~ [gorilla mux](https://github.com/gorilla/mux)
 * middleware chainning: [alice](https://github.com/justinas/alice)
-* persistence: [mgo](https://gopkg.in/mgo.v2)
+* persistence: ~~mysql~~ [mgo](https://gopkg.in/mgo.v2)
 * pattern: [DDD](https://en.wikipedia.org/wiki/Domain-driven_design)
 * unit testing: mocking interface (no framework)
 * api documentation: [go-swagger](https://github.com/go-swagger/go-swagger)
