@@ -21,10 +21,3 @@
 
 ## structure
 for more info see [here](https://talks.golang.org/2014/organizeio.slide#9)
-```
-/root
-/domain-definition
-/util-definition
-	/cmd/cmd-1
-	/cmd/cmd-2
-```
