@@ -73,7 +73,8 @@ func createRoutes(envConfig config.Environment, session *mgo.Session) *mux.Route
 
 	surveyService := survey.New(db)
 
-	pingHandler := httphandler.NewPing(session, upTime)
+	pingHandler := httphandler.NewPing(upTime, func() error { return session.Ping() })
+	//	pingHandler := httphandler.NewPing(upTime)
 	surveyHandler := httphandler.NewSurvey(surveyService)
 
 	r := mux.NewRouter()
