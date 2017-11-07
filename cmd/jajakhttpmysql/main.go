@@ -72,9 +72,9 @@ func listenToSigTerm(stopChan chan os.Signal, server *http.Server, db *sqlx.DB) 
 func createRoutes(envConfig config.Environment, db *sqlx.DB) *mux.Router {
 	upTime := uptime.New()
 
-	surveyService := survey.New(db)
+	surveyService := survey.NewMySQLService(db)
 
-	pingHandler := httphandler.NewPing(db, upTime)
+	pingHandler := httphandler.NewPing(upTime, func() error { return db.Ping() })
 	surveyHandler := httphandler.NewSurvey(surveyService)
 
 	r := mux.NewRouter()

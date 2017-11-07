@@ -71,7 +71,7 @@ func createRoutes(envConfig config.Environment, session *mgo.Session) *mux.Route
 	db := session.DB(envConfig.MongoDBName)
 	upTime := uptime.New()
 
-	surveyService := survey.New(db)
+	surveyService := survey.NewMongoService(db)
 
 	pingHandler := httphandler.NewPing(upTime, func() error { return session.Ping() })
 	//	pingHandler := httphandler.NewPing(upTime)
