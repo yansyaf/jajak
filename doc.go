@@ -76,7 +76,7 @@ type ErrorResponse struct {
 	}
 }
 
-// swagger:response NoResposne
+// swagger:response NoResponse
 type NoResponse struct{}
 
 // Standard ping response, return inputted message if provided
