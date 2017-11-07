@@ -42,7 +42,6 @@ func (r *MySQLRepository) GetSurveys() (models []Survey, err error) {
 		}
 	}
 
-	//TODO: BUG, this models will only live in this function
 	for i, model := range models {
 		if err = r.db.Select(&model.Options, query_select_option+" WHERE survey_id = ?", model.ID.String()); err != nil {
 			if err != sql.ErrNoRows {
