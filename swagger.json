@@ -1,0 +1,219 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "Jajak API Documentation",
+    "title": "jajak API.",
+    "contact": {
+      "name": "Artiko W",
+      "email": "artikow@gmail.com"
+    },
+    "version": "0.0.1"
+  },
+  "host": "128.199.91.172:8071",
+  "basePath": "/",
+  "paths": {
+    "/ping": {
+      "get": {
+        "tags": [
+          "ping"
+        ],
+        "operationId": "GetPing",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/PingResponse"
+          },
+          "500": {
+            "$ref": "#/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/surveys": {
+      "get": {
+        "tags": [
+          "surveys"
+        ],
+        "operationId": "GetSurveys",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/SurveyResponse"
+          },
+          "500": {
+            "$ref": "#/responses/ErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "surveys"
+        ],
+        "operationId": "StoreSurvey",
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Survey"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/SurveyResponse"
+          },
+          "500": {
+            "$ref": "#/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/surveys/{ID}": {
+      "get": {
+        "tags": [
+          "surveys"
+        ],
+        "operationId": "GetSurveyById",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/SurveyResponse"
+          },
+          "500": {
+            "$ref": "#/responses/ErrorResponse"
+          }
+        }
+      }
+    },
+    "/surveys/{ID}/poll": {
+      "post": {
+        "tags": [
+          "surveys"
+        ],
+        "operationId": "StorePoll",
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Poll"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/responses/NoResponse"
+          },
+          "500": {
+            "$ref": "#/responses/ErrorResponse"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Poll": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "x-go-name": "Key"
+        },
+        "value": {
+          "type": "string",
+          "x-go-name": "Value"
+        }
+      },
+      "x-go-package": "github.com/toshim45/jajak/survey"
+    },
+    "Survey": {
+      "description": "Survey model",
+      "type": "object",
+      "properties": {
+        "creator": {
+          "type": "string",
+          "x-go-name": "Creator"
+        },
+        "id": {
+          "$ref": "#/definitions/UUID"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "Options"
+        },
+        "polls": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-go-name": "Polls"
+        },
+        "title": {
+          "type": "string",
+          "x-go-name": "Title"
+        }
+      },
+      "x-go-package": "github.com/toshim45/jajak/survey"
+    },
+    "UUID": {
+      "description": "UUID representation compliant with specification\ndescribed in RFC 4122.",
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "format": "uint8"
+      },
+      "x-go-package": "github.com/satori/go.uuid"
+    }
+  },
+  "responses": {
+    "ErrorResponse": {
+      "description": "Standard error response returned when got Exception in apps",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "Error": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "NoResponse": {},
+    "PingResponse": {
+      "description": "Standard ping response, return inputted message if provided",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "SurveyResponse": {
+      "description": "Poll response, return list of polling",
+      "schema": {
+        "$ref": "#/definitions/Survey"
+      }
+    }
+  }
+}
