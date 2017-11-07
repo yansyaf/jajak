@@ -13,6 +13,7 @@ type Survey struct {
 	Polls   map[string]string `bson:"polls" json:"polls" db:"_"`
 }
 
+// Poll model
 type Poll struct {
 	Key   string `json:"key" db:"key"`
 	Value string `json:"value" db:"value"`

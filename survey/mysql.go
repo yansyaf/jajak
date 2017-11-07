@@ -43,12 +43,14 @@ func (r *MySQLRepository) GetSurveys() (models []Survey, err error) {
 	}
 
 	//TODO: BUG, this models will only live in this function
-	for _, model := range models {
+	for i, model := range models {
 		if err = r.db.Select(&model.Options, query_select_option+" WHERE survey_id = ?", model.ID.String()); err != nil {
 			if err != sql.ErrNoRows {
 				return
 			}
 		}
+
+		models[i].Options = model.Options
 
 		polls := []Poll{}
 		if err = r.db.Select(&polls, query_select_poll+" WHERE survey_id = ?", model.ID.String()); err != nil {
@@ -57,8 +59,13 @@ func (r *MySQLRepository) GetSurveys() (models []Survey, err error) {
 			}
 		}
 
+		if len(polls) == 0 {
+			continue
+		}
+
+		models[i].Polls = make(map[string]string)
 		for _, poll := range polls {
-			model.Polls[poll.Key] = poll.Value
+			models[i].Polls[poll.Key] = poll.Value
 		}
 	}
 
