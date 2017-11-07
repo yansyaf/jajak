@@ -8,7 +8,6 @@ import (
 	"github.com/toshim45/jajak/uptime"
 
 	"github.com/gorilla/schema"
-	"gopkg.in/mgo.v2"
 )
 
 var IsShuttingDown bool
@@ -21,16 +20,16 @@ type ping struct {
 }
 
 type Ping struct {
-	session *mgo.Session
-	uptime  *uptime.Service
+	uptime      *uptime.Service
+	persistence func() error
 }
 
-func NewPing(s *mgo.Session, u *uptime.Service) *Ping {
-	return &Ping{session: s, uptime: u}
+func NewPing(u *uptime.Service, p func() error) *Ping {
+	return &Ping{uptime: u, persistence: p}
 }
 
 func (h *Ping) GetPing(w http.ResponseWriter, r *http.Request) {
-	err := h.session.Ping()
+	err := h.persistence()
 	if err != nil {
 		ReplyFail(w, 500, err)
 	}
