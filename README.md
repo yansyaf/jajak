@@ -9,6 +9,7 @@
 * api documentation: [go-swagger](https://github.com/go-swagger/go-swagger)
 * configuration: [env-config](https://github.com/kelseyhightower/envconfig)
 * event consumer: [consumer](github.com/Shopify/sarama) & [group](github.com/wvanbergen/kafka/consumergroup) 
+* graceful shutdown methodology: [golang-gracefully-stop](https://medium.com/@kpbird/golang-gracefully-stop-application-23c2390bb212) but with db closing included
 
 ## walkthrough
 1. cd `<root-folder>/cmd/<one-of-cmd>`

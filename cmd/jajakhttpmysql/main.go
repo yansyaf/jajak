@@ -16,7 +16,6 @@ import (
 	"github.com/toshim45/jajak/survey"
 	"github.com/toshim45/jajak/uptime"
 
-	//	"gopkg.in/mgo.v2"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
@@ -26,9 +25,7 @@ import (
 func main() {
 	httputil.CommonPanicHandler()
 	envConfig := config.NewEnv()
-	//	mgoSession := initMongo(envConfig)
 	mysqlDB := initMySQL(envConfig)
-	//	router := createRoutes(envConfig, mgoSession)
 	router := createRoutes(envConfig, mysqlDB)
 	chainHandler := alice.New(httputil.LoggingHandler)
 
@@ -42,7 +39,6 @@ func main() {
 
 	server := &http.Server{Addr: ":" + envConfig.Port, Handler: chainHandler.Then(router)}
 
-	//	go listenToSigTerm(stopChan, server, mgoSession)
 	go listenToSigTerm(stopChan, server, mysqlDB)
 
 	log.Printf("server up at port %s", envConfig.Port)
@@ -54,7 +50,6 @@ func main() {
 	}
 }
 
-//func listenToSigTerm(stopChan chan os.Signal, server *http.Server, mgoSession *mgo.Session) {
 func listenToSigTerm(stopChan chan os.Signal, server *http.Server, db *sqlx.DB) {
 	<-stopChan
 
@@ -74,15 +69,12 @@ func listenToSigTerm(stopChan chan os.Signal, server *http.Server, db *sqlx.DB) 
 	}
 }
 
-//func createRoutes(envConfig config.Environment, session *mgo.Session) *mux.Router {
-//	db := session.DB(envConfig.MongoDBName)
 func createRoutes(envConfig config.Environment, db *sqlx.DB) *mux.Router {
 	upTime := uptime.New()
 
-	surveyService := survey.New(db)
+	surveyService := survey.NewMySQLService(db)
 
-	//	pingHandler := httphandler.NewPing(session, upTime)
-	pingHandler := httphandler.NewPing(db, upTime)
+	pingHandler := httphandler.NewPing(upTime, func() error { return db.Ping() })
 	surveyHandler := httphandler.NewSurvey(surveyService)
 
 	r := mux.NewRouter()
@@ -94,14 +86,6 @@ func createRoutes(envConfig config.Environment, db *sqlx.DB) *mux.Router {
 
 	return r
 }
-
-//func initMongo(c config.Environment) *mgo.Session {
-//	mongoURI := fmt.Sprintf("mongodb://%s:%s/%s", c.MongoHost, c.MongoPort, c.MongoDBName)
-//	session, err := mgo.Dial(mongoURI)
-//	httputil.ThrowPanic(err)
-//	log.Printf("connected to mongo on %s", mongoURI)
-//	return session
-//}
 
 func initMySQL(c config.Environment) *sqlx.DB {
 	log.Printf("Trying to connect to %s db..", c.MySQLDBHost)
