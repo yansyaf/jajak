@@ -4,7 +4,7 @@
 //
 //
 //     Schemes: http
-//     Host: 127.0.0.1:8071
+//     Host: 128.199.91.172:8071
 //     BasePath: /
 //     Version: 0.0.1
 //     Contact: Artiko W <artikow@gmail.com>
@@ -19,36 +19,65 @@
 // swagger:meta
 package main
 
+import (
+	"github.com/toshim45/jajak/survey"
+)
+
 // swagger:route GET /ping ping GetPing
 // 	responses:
 //		200: PingResponse
 //		500: ErrorResponse
 
-// swagger:route GET /polls polls GetPolls
+// swagger:route GET /surveys surveys GetSurveys
 // 	responses:
-//		200: PollResponse
+//		200: SurveyResponse
 //		500: ErrorResponse
 
-// swagger:route GET /polls/{ID} polls GetPollById
+// swagger:route GET /surveys/{ID} surveys GetSurveyById
 // 	responses:
-//		200: PollResponse
+//		200: SurveyResponse
 //		500: ErrorResponse
 
-// swagger:parameters GetPollById
-type PollPathParameter struct {
+// swagger:route POST /surveys surveys StoreSurvey
+// 	responses:
+//		200: SurveyResponse
+//		500: ErrorResponse
+
+// swagger:route POST /surveys/{ID}/poll surveys StorePoll
+// 	responses:
+//		201: NoResponse
+//		500: ErrorResponse
+
+// swagger:parameters GetSurveyById
+type SurveyPathParameter struct {
 	// In: path
 	// Required: true
 	ID string `json:"id"`
 }
 
+// swagger:parameters StoreSurvey
+type StoreSurveyParameter struct {
+	// In: body
+	Body survey.Survey
+}
+
+// swagger:parameters StorePoll
+type StorePollParameter struct {
+	// In: body
+	Body survey.Poll
+}
+
 // Standard error response returned when got Exception in apps
 // swagger:response ErrorResponse
 type ErrorResponse struct {
-	// in: body
+	// In: body
 	Body struct {
 		Error string `json: "error"`
 	}
 }
+
+// swagger:response NoResposne
+type NoResponse struct{}
 
 // Standard ping response, return inputted message if provided
 // swagger:response PingResponse
@@ -60,13 +89,8 @@ type PingResponse struct {
 }
 
 // Poll response, return list of polling
-// swagger:response PollResponse
-type PollResponse struct {
+// swagger:response SurveyResponse
+type SurveyResponse struct {
 	// In: body
-	Body struct {
-		ID      string   `json:"id"`
-		Title   string   `json:"title"`
-		Creator string   `json:"creator"`
-		Items   []string `json:"items"`
-	}
+	Body survey.Survey
 }
