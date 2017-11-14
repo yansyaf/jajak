@@ -33,7 +33,7 @@ import (
 //		200: SurveyResponse
 //		500: ErrorResponse
 
-// swagger:route GET /surveys/{surveyID} surveys GetSurveyById
+// swagger:route GET /surveys/{SurveyID} surveys GetSurveyById
 // 	responses:
 //		200: SurveyResponse
 //		500: ErrorResponse
@@ -43,7 +43,7 @@ import (
 //		200: SurveyResponse
 //		500: ErrorResponse
 
-// swagger:route POST /surveys/{surveyID}/poll surveys StorePoll
+// swagger:route POST /surveys/{SurveyID}/poll surveys StorePoll
 // 	responses:
 //		201: NoResponse
 //		500: ErrorResponse
