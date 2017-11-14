@@ -63,6 +63,9 @@ type StoreSurveyParameter struct {
 
 // swagger:parameters StorePoll
 type StorePollParameter struct {
+	// In: path
+	// Required: true
+	SurveyID string
 	// In: body
 	Body survey.Poll
 }

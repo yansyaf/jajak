@@ -108,6 +108,12 @@
         "operationId": "StorePoll",
         "parameters": [
           {
+            "type": "string",
+            "name": "SurveyID",
+            "in": "path",
+            "required": true
+          },
+          {
             "name": "Body",
             "in": "body",
             "schema": {
