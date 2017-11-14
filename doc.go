@@ -43,7 +43,7 @@ import (
 //		200: SurveyResponse
 //		500: ErrorResponse
 
-// swagger:route POST /surveys/{SurveyID}/poll surveys StorePoll
+// swagger:route POST /surveys/{SurveyID}/polls surveys StorePoll
 // 	responses:
 //		201: NoResponse
 //		500: ErrorResponse

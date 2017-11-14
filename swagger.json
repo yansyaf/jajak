@@ -100,7 +100,7 @@
         }
       }
     },
-    "/surveys/{SurveyID}/poll": {
+    "/surveys/{SurveyID}/polls": {
       "post": {
         "tags": [
           "surveys"
