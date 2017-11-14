@@ -76,7 +76,7 @@
         }
       }
     },
-    "/surveys/{ID}": {
+    "/surveys/{surveyID}": {
       "get": {
         "tags": [
           "surveys"
@@ -85,8 +85,7 @@
         "parameters": [
           {
             "type": "string",
-            "x-go-name": "ID",
-            "name": "id",
+            "name": "SurveyID",
             "in": "path",
             "required": true
           }
@@ -101,7 +100,7 @@
         }
       }
     },
-    "/surveys/{ID}/poll": {
+    "/surveys/{surveyID}/poll": {
       "post": {
         "tags": [
           "surveys"
@@ -129,6 +128,7 @@
   },
   "definitions": {
     "Poll": {
+      "description": "Poll model",
       "type": "object",
       "properties": {
         "key": {
