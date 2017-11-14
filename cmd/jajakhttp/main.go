@@ -65,6 +65,7 @@ func listenToSigTerm(stopChan chan os.Signal, server *http.Server, mgoSession *m
 	if err := server.Shutdown(ctx); err != nil {
 		log.Fatalf("could not shutdown: %v", err)
 	}
+	log.Println("Bye")
 }
 
 func createRoutes(envConfig config.Environment, session *mgo.Session) *mux.Router {

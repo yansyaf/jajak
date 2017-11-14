@@ -67,6 +67,7 @@ func listenToSigTerm(stopChan chan os.Signal, server *http.Server, db *sqlx.DB) 
 	if err := server.Shutdown(ctx); err != nil {
 		log.Fatalf("could not shutdown: %v", err)
 	}
+	log.Println("Bye")
 }
 
 func createRoutes(envConfig config.Environment, db *sqlx.DB) *mux.Router {
