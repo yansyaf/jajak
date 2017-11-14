@@ -1,8 +1,11 @@
 package survey
 
 import (
+	"fmt"
+
 	"github.com/toshim45/jajak/httputil"
 
+	"github.com/forestgiant/sliceutil"
 	"github.com/satori/go.uuid"
 )
 
@@ -34,5 +37,18 @@ func (s *Service) StoreSurvey(in Survey) (out Survey, err error) {
 }
 
 func (s *Service) StorePoll(id uuid.UUID, poll map[string]string) (err error) {
-	return s.r.StorePoll(id, poll)
+	var survey Survey
+	if survey, err = s.r.GetSurveyById(id); err != nil {
+		return
+	}
+
+	for _, value := range poll {
+		if !sliceutil.Contains(survey.Options, value) {
+			err = fmt.Errorf("option available: %v", survey.Options)
+			return
+		}
+	}
+
+	err = s.r.StorePoll(id, poll)
+	return
 }
