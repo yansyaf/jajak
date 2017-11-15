@@ -40,6 +40,7 @@ func (r *MySQLRepository) GetSurveys() (models []Survey, err error) {
 		if err != sql.ErrNoRows {
 			return
 		}
+		err = ERROR_NOT_FOUND
 	}
 
 	for i, model := range models {
@@ -47,6 +48,7 @@ func (r *MySQLRepository) GetSurveys() (models []Survey, err error) {
 			if err != sql.ErrNoRows {
 				return
 			}
+			err = ERROR_NOT_FOUND
 		}
 
 		models[i].Options = model.Options
@@ -56,6 +58,7 @@ func (r *MySQLRepository) GetSurveys() (models []Survey, err error) {
 			if err != sql.ErrNoRows {
 				return
 			}
+			err = ERROR_NOT_FOUND
 		}
 
 		if len(polls) == 0 {
@@ -76,12 +79,14 @@ func (r *MySQLRepository) GetSurveyById(id uuid.UUID) (model Survey, err error) 
 		if err != sql.ErrNoRows {
 			return
 		}
+		err = ERROR_NOT_FOUND
 	}
 
 	if err = r.db.Select(&model.Options, query_select_option+" WHERE survey_id = ?", model.ID.String()); err != nil {
 		if err != sql.ErrNoRows {
 			return
 		}
+		err = ERROR_NOT_FOUND
 	}
 
 	polls := []Poll{}
@@ -89,6 +94,7 @@ func (r *MySQLRepository) GetSurveyById(id uuid.UUID) (model Survey, err error) 
 		if err != sql.ErrNoRows {
 			return
 		}
+		err = ERROR_NOT_FOUND
 	}
 
 	if len(polls) == 0 {
@@ -136,6 +142,7 @@ func (r *MySQLRepository) StorePoll(id uuid.UUID, in map[string]string) (err err
 			if err != sql.ErrNoRows {
 				return
 			}
+			err = ERROR_NOT_FOUND
 		}
 
 		if poll.Key == "" {

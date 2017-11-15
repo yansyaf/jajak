@@ -21,20 +21,18 @@ func NewMongoRepository(database *mgo.Database) *MongoRepository {
 	return &MongoRepository{db: database}
 }
 
-func (r *MongoRepository) GetSurveys() ([]Survey, error) {
-	models := []Survey{}
-	err := r.db.C(CollectionName).Find(nil).All(&models)
-	return models, err
+func (r *MongoRepository) GetSurveys() (models []Survey, err error) {
+	err = r.db.C(CollectionName).Find(nil).All(&models)
+	return
 }
 
-func (r *MongoRepository) GetSurveyById(id uuid.UUID) (Survey, error) {
-	model := Survey{}
-	//	err := r.db.C(CollectionName).Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&model)
-	err := r.db.C(CollectionName).Find(bson.M{"_id": id}).One(&model)
+func (r *MongoRepository) GetSurveyById(id uuid.UUID) (model Survey, err error) {
+	//	err = r.db.C(CollectionName).Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&model)
+	err = r.db.C(CollectionName).Find(bson.M{"_id": id}).One(&model)
 	if err == mgo.ErrNotFound {
-		return model, nil
+		err = ERROR_NOT_FOUND
 	}
-	return model, err
+	return
 }
 
 func (r *MongoRepository) StoreSurvey(in Survey) (err error) {

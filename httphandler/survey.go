@@ -20,14 +20,19 @@ func NewSurvey(service *survey.Service) *Survey {
 }
 
 func (h *Survey) GetSurveys(w http.ResponseWriter, r *http.Request) {
-	ReplyOk(w, h.s.GetSurveys())
+	models, err := h.s.GetSurveys()
+	if err != nil {
+		ReplyFail(w, 500, err)
+		return
+	}
+	ReplyOk(w, models)
 }
 
 func (h *Survey) GetSurveyById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
-	model := h.s.GetSurveyById(uuid.FromStringOrNil(id))
-	if model.ID == uuid.Nil {
+	model, err := h.s.GetSurveyById(uuid.FromStringOrNil(id))
+	if err == survey.ERROR_NOT_FOUND {
 		ReplyFail(w, 404, fmt.Errorf("id %s not found", id))
 		return
 	}
@@ -68,7 +73,11 @@ func (h *Survey) StorePoll(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = h.s.StorePoll(id, model); err != nil {
-		ReplyFail(w, 500, err)
+		if err == survey.ERROR_NOT_FOUND {
+			ReplyFail(w, 404, fmt.Errorf("either survey or options not found"))
+		} else {
+			ReplyFail(w, 500, err)
+		}
 		return
 	}
 

@@ -1,9 +1,7 @@
 package survey
 
 import (
-	"fmt"
-
-	"github.com/toshim45/jajak/httputil"
+	"log"
 
 	"github.com/forestgiant/sliceutil"
 	"github.com/satori/go.uuid"
@@ -17,16 +15,14 @@ func NewService(repository SurveyRepository) *Service {
 	return &Service{r: repository}
 }
 
-func (s *Service) GetSurveys() []Survey {
-	surveys, err := s.r.GetSurveys()
-	httputil.ThrowPanic(err)
-	return surveys
+func (s *Service) GetSurveys() (models []Survey, err error) {
+	models, err = s.r.GetSurveys()
+	return
 }
 
-func (s *Service) GetSurveyById(id uuid.UUID) Survey {
-	model, err := s.r.GetSurveyById(id)
-	httputil.ThrowPanic(err)
-	return model
+func (s *Service) GetSurveyById(id uuid.UUID) (model Survey, err error) {
+	model, err = s.r.GetSurveyById(id)
+	return
 }
 
 func (s *Service) StoreSurvey(in Survey) (out Survey, err error) {
@@ -44,7 +40,8 @@ func (s *Service) StorePoll(id uuid.UUID, poll map[string]string) (err error) {
 
 	for _, value := range poll {
 		if !sliceutil.Contains(survey.Options, value) {
-			err = fmt.Errorf("option available: %v", survey.Options)
+			log.Printf("option available: %v, req poll: %s", survey.Options, value)
+			err = ERROR_NOT_FOUND
 			return
 		}
 	}
