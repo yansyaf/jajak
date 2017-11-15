@@ -67,7 +67,7 @@ type StorePollParameter struct {
 	// Required: true
 	SurveyID string
 	// In: body
-	Body survey.Poll
+	Body map[string]string
 }
 
 // Standard error response returned when got Exception in apps

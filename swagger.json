@@ -117,7 +117,10 @@
             "name": "Body",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/Poll"
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
             }
           }
         ],
@@ -133,21 +136,6 @@
     }
   },
   "definitions": {
-    "Poll": {
-      "description": "Poll model",
-      "type": "object",
-      "properties": {
-        "key": {
-          "type": "string",
-          "x-go-name": "Key"
-        },
-        "value": {
-          "type": "string",
-          "x-go-name": "Value"
-        }
-      },
-      "x-go-package": "github.com/toshim45/jajak/survey"
-    },
     "Survey": {
       "description": "Survey model",
       "type": "object",
